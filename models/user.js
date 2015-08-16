@@ -3,7 +3,6 @@ var bcrypt     = require('bcrypt');
 var Schema     = mongoose.Schema;
 
 var UserSchema =  new Schema({
-  name     : String,
   username : {
     type     : String,
     required : true,
@@ -28,5 +27,14 @@ UserSchema.pre('save', function (next) {
     next();
   });
 });
+
+UserSchema.methods.comparePassword = function (password, callback) {
+  var user = this;
+
+  bcrypt.compare(password, user.password, function (err, isValid) {
+    if (err) return callback(err);
+    callback(null, isValid);
+  });
+};
 
 module.exports = mongoose.model('User', UserSchema);
