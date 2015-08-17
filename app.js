@@ -9,7 +9,7 @@ var config = require('./config');
 
 var routes = require('./routes/index');
 var users  = require('./routes/users');
-var hello  = require('./routes/hello');
+var api = require('./routes/api');
 
 var app = express();
 
@@ -32,7 +32,7 @@ mongoose.connect(config.database, function (err) {
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/hello', hello);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
