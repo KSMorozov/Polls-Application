@@ -18,4 +18,11 @@ router.post('/signup', function (req, res, next) {
   });
 });
 
+router.get('/users', function (req, res, next) {
+  User.find(function (err, users) {
+    if (err) res.send(err);
+    res.json(users);
+  });
+});
+
 module.exports = router;
