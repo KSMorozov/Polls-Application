@@ -10,7 +10,6 @@ var expjwt       = require('express-jwt');
 var app          = express();
 
 var routes       = require('./routes/index');
-var users        = require('./routes/users');
 var api          = require('./routes/api');
 
 mongoose.connect(config.database, function (err) {
@@ -35,7 +34,6 @@ app.use(expjwt({ secret : config.secret }).unless({ path : [ '/',
 
 app.use('/', routes);
 app.use('/api', api);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
