@@ -1,8 +1,10 @@
 extends layout
 
 block content
-  .container
-    h1= title
-    p Welcome to #{title}
-    
+  md-toolbar(layout='row')
+    .md-toolbar-tools
+      h3.md-display-3(layout='column') YourPolls
+      span(flex)
+      a(href='#')
+        | Login
   

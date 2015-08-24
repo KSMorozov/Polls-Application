@@ -1,12 +1,16 @@
 doctype html
-html(ng-app='PollsApp')
+html(lang='en', ng-app='PollsApp')
   head
     title= title
-    link(rel='stylesheet', href='https://storage.googleapis.com/code.getmdl.io/1.0.3/material.purple-deep_purple.min.css')
-    link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src='https://storage.googleapis.com/code.getmdl.io/1.0.3/material.min.js') 
-  body
+    meta(name='viewport', content='initial-scale=1')
+    link(rel='stylesheet' href='https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
+    link(rel='stylesheet' href='./stylesheets/style.css')
+  body(layout='column')
     block content
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.5.0/angular-material-icons.min.js')
     script(src='./javascripts/app.js')
