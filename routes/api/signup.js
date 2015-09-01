@@ -7,7 +7,10 @@ signup = function (req, res, next) {
   });
 
   user.save(function (err) {
-    if (err) throw next(err);
+    if (err) {
+      res.sendStatus(500);
+      return next(err);
+    }
     res.send(201);
   });
 };

@@ -22,18 +22,19 @@
 
 (function () {
   angular.module('PollsApp')
-  .controller('LoginController', function ($scope, UserService, $location) {
+  .controller('LoginController', function ($scope, $location, UserService) {
     var self = this;
 
     self.login = function (username, password) {
       UserService.login(self.username, self.password)
       .then(function (res) {
-        console.log(res.data);
         $scope.$emit('login', res.data);
         $location.path('/');
+      }, function (res) {
+        self.password = self.username = '';
+        self.message = res.status + ' ' + res.data;
       });
     };
-
   });
 })();
 
@@ -74,8 +75,20 @@
 
 (function () {
   angular.module('PollsApp')
-  .controller('SignupController', function ($scope) {
-    this.message = 'Signup Controller';
+  .controller('SignupController', function ($scope, $location, UserService) {
+    var self = this;
+
+    self.signup = function (username, password) {
+      UserService.signup(self.username, self.password)
+      .success(function (res) {
+        console.log(res);
+        $location.path('/api/login');
+      })
+      .error(function (res) {
+        self.password = self.username = '';
+        self.message = res;
+      });
+    };
   });
 })();
 
@@ -100,6 +113,13 @@
       .then(function (res) {
         self.token = res.data;
         return self.getUser();
+      });
+    };
+
+    self.signup = function (username, password) {
+      return $http.post('/api/signup', {
+        username : username,
+        password : password
       });
     };
   });

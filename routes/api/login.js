@@ -11,7 +11,7 @@ var login = function (req, res, next) {
   .select('password')
   .exec(function(err, user) {
     if (err)   return next(err);
-    if (!user) res.sendStatus(401);
+    if (!user) return res.sendStatus(401);
     user.comparePassword(req.body.password, function (err, isValid) {
       if (err) next(err);
       if (!isValid) res.sendStatus(401);

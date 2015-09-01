@@ -1,6 +1,6 @@
+.md-display-2(layout='row', layout-align='center center', flex='') {{LoginCtrl.message}}
 md-content(layout='row', layout-align='center center', flex='', layout-padding='', ng-if='!activeUser')
   form(flex='33', ng-submit='LoginCtrl.login(username, password)')
-    //- .md-display-3(layout='column') Login To Your Account.
     md-input-container
       label Username
       input(name='username', type='text', ng-model='LoginCtrl.username', required='')

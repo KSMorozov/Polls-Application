@@ -21,5 +21,12 @@
         return self.getUser();
       });
     };
+
+    self.signup = function (username, password) {
+      return $http.post('/api/signup', {
+        username : username,
+        password : password
+      });
+    };
   });
 })();

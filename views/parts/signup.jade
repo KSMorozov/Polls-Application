@@ -1,2 +1,11 @@
-md-content(layout-align='center', layout-padding, layout='row')
-  h1 This is {{SignupCtrl.message}}
+.md-display-2(layout='row', layout-align='center center', flex='') {{SignupCtrl.message}}
+md-content(layout='row', layout-align='center center', flex='', layout-padding='', ng-if='!activeUser')
+  form(flex='33', ng-submit='SignupCtrl.signup(username, password)')
+    md-input-container
+      label Username
+      input(name='username', type='text', ng-model='SignupCtrl.username', required='')
+    md-input-container
+      label Password
+      input(name='password', type='password', ng-model='SignupCtrl.password', required='')
+    div(layout='column')
+      md-button(class='md-raised md-primary', type='submit') Signup
