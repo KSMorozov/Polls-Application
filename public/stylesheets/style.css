@@ -1,24 +1,17 @@
-md-content {
-  margin: 0 auto;
+/** {
+  border: 1px solid red;
+}*/
+
+ng-view {
+  padding-top: 10%;
+}
+
+a {
+  margin-right: 5px;
+  border: 1px solid white;
+  border-color: transparent;
 }
 
 a:hover {
-  margin-top: 2px;
-  border-bottom: 2px solid white;
-}
-
-.gray {
-  background: #f5f5f5; }
-.green {
-  background: #b9f6ca; }
-.yellow {
-  background: #ffff8d; }
-.blue {
-  background: #84ffff; }
-.purple {
-  background: #b388ff; }
-.red {
-  background: #ff8a80; }
-md-grid-tile {
-  transition: all 400ms ease-out 50ms;
+  border-bottom-color: white;
 }

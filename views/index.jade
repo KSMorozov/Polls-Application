@@ -1,10 +1,15 @@
 extends layout
 
 block content
-  md-toolbar(layout='row')
+  md-toolbar(layout='row' layout-align='center')
     .md-toolbar-tools
-      h3.md-display-3(layout='column') YourPolls
+      a(href='/')
+        h3.md-display-3(layout='column') YourPolls
       span(flex)
-      a(href='#')
-        | Login
-  
+      a(href='api/login', ng-if='!activeUser')
+        h3.md-display-3(layout='column') Login
+      a(href='api/signup', ng-if='!activeUser')
+        h3.md-display-3(layout='column') Signup
+      .md-title(layout='column', ng-if='activeUser')
+        | Signed in as {{activeUser.username}}
+  ng-view

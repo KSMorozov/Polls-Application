@@ -7,10 +7,8 @@ signup = function (req, res, next) {
   });
 
   user.save(function (err) {
-    if (err) res.send(err);
-    res.json({
-      message : 'User has been created!'
-    });
+    if (err) throw next(err);
+    res.send(201);
   });
 };
 

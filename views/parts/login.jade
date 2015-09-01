@@ -1,0 +1,11 @@
+md-content(layout='row', layout-align='center center', flex='', layout-padding='', ng-if='!activeUser')
+  form(flex='33', ng-submit='LoginCtrl.login(username, password)')
+    //- .md-display-3(layout='column') Login To Your Account.
+    md-input-container
+      label Username
+      input(name='username', type='text', ng-model='LoginCtrl.username', required='')
+    md-input-container
+      label Password
+      input(name='password', type='password', ng-model='LoginCtrl.password', required='')
+    div(layout='column')
+      md-button(class='md-raised md-primary', type='submit') Login
