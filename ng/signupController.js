@@ -6,7 +6,6 @@
     self.signup = function (username, password) {
       UserService.signup(self.username, self.password)
       .success(function (res) {
-        console.log(res);
         $location.path('/api/login');
       })
       .error(function (res) {

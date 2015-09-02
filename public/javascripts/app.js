@@ -15,7 +15,7 @@
 
 (function () {
   angular.module('PollsApp')
-  .controller('HomeController', function ($scope) {
+  .controller('HomeController', function ($scope, $location) {
     this.message = 'Home Controller';
   });
 })();
@@ -81,7 +81,6 @@
     self.signup = function (username, password) {
       UserService.signup(self.username, self.password)
       .success(function (res) {
-        console.log(res);
         $location.path('/api/login');
       })
       .error(function (res) {

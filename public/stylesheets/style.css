@@ -2,10 +2,6 @@
   border: 1px solid red;
 }*/
 
-ng-view {
-  padding-top: 10%;
-}
-
 a {
   margin-right: 5px;
   border: 1px solid white;

@@ -1,6 +1,9 @@
-.md-display-2(layout='row', layout-align='center center', flex='') {{SignupCtrl.message}}
-md-content(layout='row', layout-align='center center', flex='', layout-padding='', ng-if='!activeUser')
-  form(flex='33', ng-submit='SignupCtrl.signup(username, password)')
+md-content(layout='column', layout-align='center',
+           layout-padding='', ng-if='!activeUser',
+           flex-sm='75', flex-md='65', flex-lg='55', flex-gt-lg='35')
+  form(ng-submit='SignupCtrl.signup(username, password)')
+    md-input-container(ng-if='SignupCtrl.message', layout='row', layout-align='center')
+      p(ng-bind='SignupCtrl.message')
     md-input-container
       label Username
       input(name='username', type='text', ng-model='SignupCtrl.username', required='')

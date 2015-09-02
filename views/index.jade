@@ -12,4 +12,4 @@ block content
         h3.md-display-3(layout='column') Signup
       .md-title(layout='column', ng-if='activeUser')
         | Signed in as {{activeUser.username}}
-  ng-view
+  ng-view(layout='row', flex, layout-align='center center')

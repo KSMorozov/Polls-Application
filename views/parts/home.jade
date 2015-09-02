@@ -1,2 +1,5 @@
-md-content(layout-align='center', layout-padding, layout='row')
-  h1 This is {{HomeCtrl.message}}
+md-content(layout='column', layout-align='center',
+           layout-padding='', ng-if='!activeUser',
+           flex-sm='75', flex-md='65', flex-lg='55', flex-gt-lg='35')
+  div(layout='row', layout-align='center')
+    .md-title This is {{HomeCtrl.message}}
