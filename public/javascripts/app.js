@@ -6,10 +6,28 @@
 
 (function () {
   angular.module('PollsApp')
-  .controller('ApplicationController', function ($scope) {
+  .controller('ApplicationController', function ($scope, $location, UserService) {
     $scope.$on('login', function (_, user) {
-      $scope.activeUser = user;
+      UserService.setAUser(user.username);
+      $scope.activeUser = UserService.getAUser();
     });
+
+    $scope.logout = function () {
+      UserService.logout();
+      $scope.activeUser = '';
+      $location.path('api/login');
+    };
+
+    $scope.isLoggedIn = UserService.isLoggedIn;
+
+    $scope.$watch(
+      function () {
+        return UserService.getAUser();
+      },
+      function (n, o) {
+        $scope.activeUser = n;
+      }
+    );
   });
 })();
 
@@ -93,13 +111,13 @@
 
 (function () {
   angular.module('PollsApp')
-  .service('UserService', function ($http) {
+  .service('UserService', function ($http, $window) {
     var self = this;
 
     self.getUser = function () {
       return $http.get('/api/me', {
         headers : {
-          'Authorization' : 'Bearer ' + this.token
+          'Authorization' : 'Bearer ' + self.getToken()
         }
       });
     };
@@ -110,7 +128,8 @@
         password : password
       })
       .then(function (res) {
-        self.token = res.data;
+        // self.token = res.data;
+        self.setToken(res.data);
         return self.getUser();
       });
     };
@@ -120,6 +139,36 @@
         username : username,
         password : password
       });
+    };
+
+    self.logout = function () {
+      self.setToken();
+      self.remAUser();
+    };
+
+    self.isLoggedIn = function () {
+      return !!self.getToken();
+    };
+
+    self.getToken = function () {
+      return $window.localStorage.getItem('token');
+    };
+
+    self.setToken = function (token) {
+      if (token) $window.localStorage.setItem('token', token);
+      else       $window.localStorage.removeItem('token');
+    };
+
+    self.getAUser = function () {
+      return $window.localStorage.getItem('user');
+    };
+
+    self.setAUser = function (user) {
+      $window.localStorage.setItem('user', user);
+    };
+
+    self.remAUser = function () {
+      $window.localStorage.removeItem('user');
     };
   });
 })();
