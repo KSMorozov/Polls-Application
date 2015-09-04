@@ -1,26 +1,19 @@
 (function () {
   angular.module('PollsApp')
-  .controller('ApplicationController', function ($scope, $location, UserService) {
-    $scope.$on('login', function (_, user) {
-      UserService.setAUser(user.username);
-      $scope.activeUser = UserService.getAUser();
-    });
+  .controller('ApplicationController', function ($scope, $auth, Account) {
+    var self = this;
 
-    $scope.logout = function () {
-      UserService.logout();
-      $scope.activeUser = '';
-      $location.path('api/login');
+    self.isLoggedIn = function () {
+      return $auth.isAuthenticated();
     };
 
-    $scope.isLoggedIn = UserService.isLoggedIn;
+    self.getProfile = function () {
+      Account.getProfile()
+      .then(function (res) {
+        self.activeUser = res.data.username;
+      });
+    };
 
-    $scope.$watch(
-      function () {
-        return UserService.getAUser();
-      },
-      function (n, o) {
-        $scope.activeUser = n;
-      }
-    );
+    self.getProfile();
   });
 })();

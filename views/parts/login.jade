@@ -1,9 +1,7 @@
 md-content(layout='column', layout-align='center',
            layout-padding='', ng-if='!activeUser',
            flex-sm='75', flex-md='65', flex-lg='55', flex-gt-lg='35')
-  form(ng-submit='LoginCtrl.login(username, password)')
-    md-input-container(ng-if='LoginCtrl.message', layout='row', layout-align='center')
-      p(ng-bind='LoginCtrl.message')
+  form(ng-submit='LoginCtrl.login()')
     md-input-container
       label Username
       input(name='username', type='text', ng-model='LoginCtrl.username', required='')

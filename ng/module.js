@@ -1,5 +1,10 @@
 (function () {
-  angular.module('PollsApp', ['ngRoute',
+  angular.module('PollsApp', ['ngResource',
+                              'ngMessages',
+                              'ngAnimate',
+                              'toaster',
+                              'ui.router',
+                              'satellizer',
                               'ngMaterial',
                               'ngMdIcons']);
 })();

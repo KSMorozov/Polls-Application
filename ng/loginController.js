@@ -1,16 +1,19 @@
 (function () {
   angular.module('PollsApp')
-  .controller('LoginController', function ($scope, $location, UserService) {
+  .controller('LoginController', function ($scope, $location, $auth, toaster) {
     var self = this;
 
-    self.login = function (username, password) {
-      UserService.login(self.username, self.password)
-      .then(function (res) {
-        $scope.$emit('login', res.data);
+    self.login = function () {
+      $auth.login({
+        username : self.username,
+        password : self.password
+      })
+      .then(function () {
+        toaster.success('Login', 'You have successfully signed in.');
         $location.path('/');
-      }, function (res) {
-        self.password = self.username = '';
-        self.message = res.status + ' ' + res.data;
+      })
+      .catch(function (res) {
+        toaster.error('Login', 'You have not signed in ' + res.statusText);
       });
     };
   });

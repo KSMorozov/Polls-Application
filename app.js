@@ -9,12 +9,13 @@ var config       = require('./config');
 var expjwt       = require('express-jwt');
 var app          = express();
 
-var routes       = require('./routes/index');
+var index        = require('./routes/index');
 var api          = require('./routes/api');
+var auth         = require('./routes/auth');
 
-mongoose.connect(config.database, function (err) {
-  if (err) console.log('connection failed');
-  else console.log('W E R G U C C I B O Y S .');
+mongoose.connect(config.database);
+mongoose.connection.on('error', function (err) {
+  console.log('Error: Could not connect to MongoDB');
 });
 
 // view engine setup
@@ -29,11 +30,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expjwt({ secret : config.secret }).unless({ path : [ '/',
-                                                             '/api/login',
-                                                             '/api/signup'] }));
+                                                             '/auth/login',
+                                                             '/auth/signup'] }));
 
+app.use('/auth', auth);
 app.use('/api', api);
-app.use('/', routes);
+app.use('/', index);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

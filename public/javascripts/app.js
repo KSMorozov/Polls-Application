@@ -1,58 +1,84 @@
 (function () {
-  angular.module('PollsApp', ['ngRoute',
+  angular.module('PollsApp', ['ngResource',
+                              'ngMessages',
+                              'ngAnimate',
+                              'toaster',
+                              'ui.router',
+                              'satellizer',
                               'ngMaterial',
                               'ngMdIcons']);
 })();
 
 (function () {
   angular.module('PollsApp')
-  .controller('ApplicationController', function ($scope, $location, UserService) {
-    $scope.$on('login', function (_, user) {
-      UserService.setAUser(user.username);
-      $scope.activeUser = UserService.getAUser();
-    });
-
-    $scope.logout = function () {
-      UserService.logout();
-      $scope.activeUser = '';
-      $location.path('api/login');
-    };
-
-    $scope.isLoggedIn = UserService.isLoggedIn;
-
-    $scope.$watch(
-      function () {
-        return UserService.getAUser();
-      },
-      function (n, o) {
-        $scope.activeUser = n;
+  .factory('Account', function ($http) {
+    return {
+      getProfile : function () {
+        return $http.get('/api/me');
       }
-    );
+    };
   });
 })();
 
 (function () {
   angular.module('PollsApp')
-  .controller('HomeController', function ($scope, $location) {
-    this.message = 'Home Controller';
-  });
-})();
-
-(function () {
-  angular.module('PollsApp')
-  .controller('LoginController', function ($scope, $location, UserService) {
+  .controller('ApplicationController', function ($scope, $auth, Account) {
     var self = this;
 
-    self.login = function (username, password) {
-      UserService.login(self.username, self.password)
+    self.isLoggedIn = function () {
+      return $auth.isAuthenticated();
+    };
+
+    self.getProfile = function () {
+      Account.getProfile()
       .then(function (res) {
-        $scope.$emit('login', res.data);
-        $location.path('/');
-      }, function (res) {
-        self.password = self.username = '';
-        self.message = res.status + ' ' + res.data;
+        self.activeUser = res.data.username;
       });
     };
+
+    self.getProfile();
+  });
+})();
+
+(function () {
+  angular.module('PollsApp')
+  .controller('HomeController', function () {
+    var self = this;
+
+    self.message = 'Home Controller';
+  });
+})();
+
+(function () {
+  angular.module('PollsApp')
+  .controller('LoginController', function ($scope, $location, $auth, toaster) {
+    var self = this;
+
+    self.login = function () {
+      $auth.login({
+        username : self.username,
+        password : self.password
+      })
+      .then(function () {
+        toaster.success('Login', 'You have successfully signed in.');
+        $location.path('/');
+      })
+      .catch(function (res) {
+        toaster.error('Login', 'You have not signed in ' + res.statusText);
+      });
+    };
+  });
+})();
+
+(function () {
+  angular.module('PollsApp')
+  .controller('LogoutController', function ($scope, $location, $auth, toaster) {
+    if (!$auth.isAuthenticated()) return ;
+    $auth.logout()
+    .then(function () {
+      toaster.info('Logout', 'You have successfully logged out');
+      $location.path('/');
+    });
   });
 })();
 
@@ -68,107 +94,93 @@
 
 (function () {
   angular.module('PollsApp')
+  .controller('PollsController', function () {
+    var self = this;
 
-  .config(function ($routeProvider, $locationProvider) {
-    $routeProvider
-    .when('/', {
-      templateUrl:  'templates/home.html',
-      controller:   'HomeController',
-      controllerAs: 'HomeCtrl'
+    self.message = 'Polls Controller';
+  });
+})();
+
+(function () {
+  angular.module('PollsApp')
+  .config(function ($locationProvider, $stateProvider, $urlRouterProvider, $authProvider) {
+    $stateProvider
+    .state('home',  {
+      url          : '/',
+      templateUrl  : 'templates/home.html',
+      controller   : 'HomeController',
+      controllerAs : 'HomeCtrl'
     })
-    .when('/api/signup', {
-      templateUrl:  'templates/signup.html',
-      controller:   'SignupController',
-      controllerAs: 'SignupCtrl'
+    .state('login', {
+      url          : '/login',
+      templateUrl  : 'templates/login.html',
+      controller   : 'LoginController',
+      controllerAs : 'LoginCtrl',
+      resolve      : {
+        skipIfLoggedIn : skipIfLoggedIn
+      }
     })
-    .when('/api/login', {
-      templateUrl:  'templates/login.html',
-      controller:   'LoginController',
-      controllerAs: 'LoginCtrl'
+    .state('signup', {
+      url          : '/signup',
+      templateUrl  : 'templates/signup.html',
+      controller   : 'SignupController',
+      controllerAs : 'SignupCtrl',
+      resolve      : {
+        skipIfLoggedIn : skipIfLoggedIn
+      }
+    })
+    .state('logout', {
+      url          : '/logout',
+      template     :  null,
+      controller   : 'LogoutController',
+      controllerAs : 'LogoutCtrl'
+    })
+    .state('polls', {
+      url          : '/polls',
+      templateUrl  : 'templates/polls.html',
+      controller   : 'PollsController',
+      controllerAs : 'PollsCtrl',
+      resolve      : {
+        loginRequired : loginRequired
+      }
     });
 
+    $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);
+    
+    function skipIfLoggedIn($q, $auth) {
+      var deferred = $q.defer();
+      if ($auth.isAuthenticated()) deferred.reject();
+      else                         deferred.resolve();
+      return deferred.promise;
+    }
+
+    function loginRequired($q, $location, $auth) {
+      var deferred = $q.defer();
+      if ($auth.isAuthenticated()) deferred.resolve();
+      else                         $location.path('/login');
+      return deferred.promise;
+    }
   });
 })();
 
 (function () {
   angular.module('PollsApp')
-  .controller('SignupController', function ($scope, $location, UserService) {
+  .controller('SignupController', function ($scope, $location, $auth, toaster) {
     var self = this;
 
-    self.signup = function (username, password) {
-      UserService.signup(self.username, self.password)
-      .success(function (res) {
-        $location.path('/api/login');
+    self.signup = function () {
+      $auth.signup({
+        username : self.username,
+        password : self.password
       })
-      .error(function (res) {
-        self.password = self.username = '';
-        self.message = res;
-      });
-    };
-  });
-})();
-
-(function () {
-  angular.module('PollsApp')
-  .service('UserService', function ($http, $window) {
-    var self = this;
-
-    self.getUser = function () {
-      return $http.get('/api/me', {
-        headers : {
-          'Authorization' : 'Bearer ' + self.getToken()
-        }
-      });
-    };
-
-    self.login = function (username, password) {
-      return $http.post('/api/login', {
-        username : username,
-        password : password
+      .then(function () {
+        $location.path('/login');
+        toaster.info('Signup', 'You have successfully created a new account');
       })
-      .then(function (res) {
-        // self.token = res.data;
-        self.setToken(res.data);
-        return self.getUser();
+      .catch(function (res) {
+        toaster.error('Signup', 'You have not signed up ' + res.statusText);
       });
-    };
-
-    self.signup = function (username, password) {
-      return $http.post('/api/signup', {
-        username : username,
-        password : password
-      });
-    };
-
-    self.logout = function () {
-      self.setToken();
-      self.remAUser();
-    };
-
-    self.isLoggedIn = function () {
-      return !!self.getToken();
-    };
-
-    self.getToken = function () {
-      return $window.localStorage.getItem('token');
-    };
-
-    self.setToken = function (token) {
-      if (token) $window.localStorage.setItem('token', token);
-      else       $window.localStorage.removeItem('token');
-    };
-
-    self.getAUser = function () {
-      return $window.localStorage.getItem('user');
-    };
-
-    self.setAUser = function (user) {
-      $window.localStorage.setItem('user', user);
-    };
-
-    self.remAUser = function () {
-      $window.localStorage.removeItem('user');
     };
   });
 })();

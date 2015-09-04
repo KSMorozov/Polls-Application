@@ -1,24 +1,62 @@
 (function () {
   angular.module('PollsApp')
-
-  .config(function ($routeProvider, $locationProvider) {
-    $routeProvider
-    .when('/', {
-      templateUrl:  'templates/home.html',
-      controller:   'HomeController',
-      controllerAs: 'HomeCtrl'
+  .config(function ($locationProvider, $stateProvider, $urlRouterProvider, $authProvider) {
+    $stateProvider
+    .state('home',  {
+      url          : '/',
+      templateUrl  : 'templates/home.html',
+      controller   : 'HomeController',
+      controllerAs : 'HomeCtrl'
     })
-    .when('/api/signup', {
-      templateUrl:  'templates/signup.html',
-      controller:   'SignupController',
-      controllerAs: 'SignupCtrl'
+    .state('login', {
+      url          : '/login',
+      templateUrl  : 'templates/login.html',
+      controller   : 'LoginController',
+      controllerAs : 'LoginCtrl',
+      resolve      : {
+        skipIfLoggedIn : skipIfLoggedIn
+      }
     })
-    .when('/api/login', {
-      templateUrl:  'templates/login.html',
-      controller:   'LoginController',
-      controllerAs: 'LoginCtrl'
+    .state('signup', {
+      url          : '/signup',
+      templateUrl  : 'templates/signup.html',
+      controller   : 'SignupController',
+      controllerAs : 'SignupCtrl',
+      resolve      : {
+        skipIfLoggedIn : skipIfLoggedIn
+      }
+    })
+    .state('logout', {
+      url          : '/logout',
+      template     :  null,
+      controller   : 'LogoutController',
+      controllerAs : 'LogoutCtrl'
+    })
+    .state('polls', {
+      url          : '/polls',
+      templateUrl  : 'templates/polls.html',
+      controller   : 'PollsController',
+      controllerAs : 'PollsCtrl',
+      resolve      : {
+        loginRequired : loginRequired
+      }
     });
 
+    $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);
+    
+    function skipIfLoggedIn($q, $auth) {
+      var deferred = $q.defer();
+      if ($auth.isAuthenticated()) deferred.reject();
+      else                         deferred.resolve();
+      return deferred.promise;
+    }
+
+    function loginRequired($q, $location, $auth) {
+      var deferred = $q.defer();
+      if ($auth.isAuthenticated()) deferred.resolve();
+      else                         $location.path('/login');
+      return deferred.promise;
+    }
   });
 })();

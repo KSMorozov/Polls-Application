@@ -1,6 +1,8 @@
 (function () {
   angular.module('PollsApp')
-  .controller('HomeController', function ($scope, $location) {
-    this.message = 'Home Controller';
+  .controller('HomeController', function () {
+    var self = this;
+
+    self.message = 'Home Controller';
   });
 })();

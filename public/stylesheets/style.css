@@ -9,6 +9,10 @@ a {
   border-color: transparent;
 }
 
+.active {
+  border-bottom-color: white;
+}
+
 a:hover {
   border-bottom-color: white;
 }

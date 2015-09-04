@@ -14,14 +14,14 @@ var login = function (req, res, next) {
     if (!user) return res.sendStatus(401);
     user.comparePassword(req.body.password, function (err, isValid) {
       if (err) next(err);
-      if (!isValid) res.sendStatus(401);
+      if (!isValid) return res.sendStatus(401);
       var token = jwt.sign({
           username : user.username,
           _id : user._id
         }, config.secret, {
         expiresInMinutes : 1440
       });
-      res.json(token);
+      res.json({ token : token });
     });
   });
 };

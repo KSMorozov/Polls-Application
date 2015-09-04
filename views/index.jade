@@ -3,15 +3,15 @@ extends layout
 block content
   md-toolbar(layout='row' layout-align='center')
     .md-toolbar-tools
-      a(href='/')
+      a(ui-sref='home', ui-sref-active='active')
         h3.md-display-3(layout='column') YourPolls
       span(flex)
-      a(href='api/login', ng-if='!isLoggedIn()')
+      a(ui-sref='login', ng-if='!AppCtrl.isLoggedIn()', ui-sref-active='active')
         h3.md-display-3(layout='column') Login
-      a(href='api/signup', ng-if='!isLoggedIn()')
-        h3.md-display-3(layout='column') Signup
-      .md-title(layout='column', ng-if='isLoggedIn()')
-        | Signed in as {{activeUser}}
-      a(href='#', ng-if='isLoggedIn()', ng-click='logout()')
+      a(ui-sref='signup', ng-if='!AppCtrl.isLoggedIn()', ui-sref-active='active')
+        h3.md-display-3(layout='column') Sign up
+      .md-title(layout='column', ng-if='AppCtrl.isLoggedIn()', ng-bind='AppCtrl.activeUser')
+      a(ui-sref='logout', ng-if='AppCtrl.isLoggedIn()')
         h3.md-display-3(layout='column') Logout
-  ng-view(layout='row', flex, layout-align='center center')
+  toaster-container(toaster-options="{'time-out': 1500, 'close-button':true, 'animation-class': 'toast-top-center'}")
+  ui-view(layout='row', flex, layout-align='center center')
