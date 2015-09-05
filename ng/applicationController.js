@@ -14,6 +14,10 @@
       });
     };
 
-    self.getProfile();
+    $scope.$on('change', function () {
+      if ($auth.isAuthenticated()) self.getProfile();
+    });
+
+    if ($auth.isAuthenticated()) self.getProfile();
   });
 })();

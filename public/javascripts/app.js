@@ -36,7 +36,11 @@
       });
     };
 
-    self.getProfile();
+    $scope.$on('change', function () {
+      if ($auth.isAuthenticated()) self.getProfile();
+    });
+
+    if ($auth.isAuthenticated()) self.getProfile();
   });
 })();
 
@@ -60,6 +64,7 @@
         password : self.password
       })
       .then(function () {
+        $scope.$emit('change');
         toaster.success('Login', 'You have successfully signed in.');
         $location.path('/');
       })
@@ -76,6 +81,7 @@
     if (!$auth.isAuthenticated()) return ;
     $auth.logout()
     .then(function () {
+      $scope.$emit('change');
       toaster.info('Logout', 'You have successfully logged out');
       $location.path('/');
     });

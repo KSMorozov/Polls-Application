@@ -9,6 +9,7 @@
         password : self.password
       })
       .then(function () {
+        $scope.$emit('change');
         toaster.success('Login', 'You have successfully signed in.');
         $location.path('/');
       })
