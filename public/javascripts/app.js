@@ -46,10 +46,14 @@
 
 (function () {
   angular.module('PollsApp')
-  .controller('HomeController', function () {
+  .controller('HomeController', function ($scope, $auth, $location) {
     var self = this;
 
-    self.message = 'Home Controller';
+    self.isLoggedIn = function () {
+      return $auth.isAuthenticated();
+    };
+
+    self.message = 'Home';
   });
 })();
 
@@ -72,6 +76,8 @@
         toaster.error('Login', 'You have not signed in ' + res.statusText);
       });
     };
+
+    self.message = 'Login';
   });
 })();
 
@@ -83,7 +89,8 @@
     .then(function () {
       $scope.$emit('change');
       toaster.info('Logout', 'You have successfully logged out');
-      $location.path('/');
+      // why the fuck it works only with double slash AYY LMAO !?
+      $location.path('//');
     });
   });
 })();
@@ -188,5 +195,7 @@
         toaster.error('Signup', 'You have not signed up ' + res.statusText);
       });
     };
+
+    self.message = 'Signup';
   });
 })();

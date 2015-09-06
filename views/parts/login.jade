@@ -1,12 +1,16 @@
 md-content(layout='column', layout-align='center',
            layout-padding='', ng-if='!activeUser',
-           flex-sm='75', flex-md='65', flex-lg='55', flex-gt-lg='35')
-  form(ng-submit='LoginCtrl.login()')
-    md-input-container
-      label Username
+           flex-sm='', flex-md='65', flex-lg='55', flex-gt-lg='35')
+  div(layout='row', layout-align='center')
+    md-toolbar.content-toolbar
+      .md-toolbar-tools
+        .md-title(ng-bind='LoginCtrl.message')
+  form(ng-submit='LoginCtrl.login()', layout='column' layout-align='space-around').md-whiteframe-z1
+    md-input-container(layout='column')
+      label() Username
       input(name='username', type='text', ng-model='LoginCtrl.username', required='')
-    md-input-container
+    md-input-container(layout='column')
       label Password
       input(name='password', type='password', ng-model='LoginCtrl.password', required='')
-    div(layout='column')
+    section(layout='column')
       md-button(class='md-raised md-primary', type='submit') Login

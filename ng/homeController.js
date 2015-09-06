@@ -1,8 +1,12 @@
 (function () {
   angular.module('PollsApp')
-  .controller('HomeController', function () {
+  .controller('HomeController', function ($scope, $auth, $location) {
     var self = this;
 
-    self.message = 'Home Controller';
+    self.isLoggedIn = function () {
+      return $auth.isAuthenticated();
+    };
+
+    self.message = 'Home';
   });
 })();

@@ -17,5 +17,7 @@
         toaster.error('Login', 'You have not signed in ' + res.statusText);
       });
     };
+
+    self.message = 'Login';
   });
 })();

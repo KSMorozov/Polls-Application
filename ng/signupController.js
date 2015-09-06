@@ -16,5 +16,7 @@
         toaster.error('Signup', 'You have not signed up ' + res.statusText);
       });
     };
+
+    self.message = 'Signup';
   });
 })();
