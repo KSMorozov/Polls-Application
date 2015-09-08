@@ -40,11 +40,17 @@
       resolve      : {
         loginRequired : loginRequired
       }
+    })
+    .state('poll', {
+      url          : '/:_id',
+      templateUrl  : 'templates/poll.html',
+      controller   : 'PollController',
+      controllerAs : 'PollCtrl'
     });
 
     $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);
-    
+
     function skipIfLoggedIn($q, $auth) {
       var deferred = $q.defer();
       if ($auth.isAuthenticated()) deferred.reject();

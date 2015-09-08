@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  md-toolbar(layout='row' layout-align='center')
+  md-toolbar(layout='row')
     .md-toolbar-tools
       a(ui-sref='home', ui-sref-active='active')
         h3.md-display-3(layout='column') YourPolls
@@ -11,7 +11,9 @@ block content
       a(ui-sref='signup', ng-if='!AppCtrl.isLoggedIn()', ui-sref-active='active')
         h3.md-display-3(layout='column') Sign up
       .md-title(layout='column', ng-if='AppCtrl.isLoggedIn()', ng-bind='AppCtrl.activeUser')
+      a(ui-sref='polls', ng-if='AppCtrl.isLoggedIn()')
+          h3.md-display-3(layout='column') Polls
       a(ui-sref='logout', ng-if='AppCtrl.isLoggedIn()')
         h3.md-display-3(layout='column') Logout
   toaster-container(toaster-options="{'time-out': 1500, 'close-button':true, 'animation-class': 'toast-top-center'}")
-  ui-view(layout='row', flex, layout-align='center center')
+  ui-view(layout='row', flex='', layout-align='center', layout-margin='', layout-padding='')

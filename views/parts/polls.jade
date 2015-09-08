@@ -1,6 +1,22 @@
-md-content(layout='column', layout-align='center',
+md-content.content-custom(layout='column', layout-align='center',
            layout-padding='', ng-if='!activeUser',
-           flex-sm='75', flex-md='65', flex-lg='55', flex-gt-lg='35')
-  div(layout='row', layout-align='center')
-    .md-title This is {{PollsCtrl.message}}
-    p efusytfikwhefgihe
+           flex-sm='', flex-md='65', flex-lg='65', flex-gt-lg='65')
+  //- div(layout='row', layout-align='center')
+  md-toolbar.content-toolbar(layout='row')
+    .md-toolbar-tools
+      .md-title(ng-bind='PollsCtrl.message')
+  md-content.md-whiteframe-z1(layout='column', layout-align='center start', 
+                              layout-padding='', ng-if='PollsCtrl.isLoggedIn()')
+    form(disabled='', layout-fill='', layout-margin='', layout="column", flex='',
+         ng-repeat='poll in PollsCtrl.polls | orderBy : "-created"')
+      md-subheader(ng-bind='poll.subject')
+      md-radio-group
+        div(layout='row', layout-align='space-between center',
+            ng-repeat='option in poll.options')
+          md-radio-button(ng-value ='option.option',
+                          ng-disabled='HomeCtrl.voteid',
+                          ng-bind='option.option')
+          label {{option.count}}
+      md-button(class='md-raised md-primary',
+                ui-sref='poll({_id:poll._id})') View  
+      md-divider(ng-if='!$last')

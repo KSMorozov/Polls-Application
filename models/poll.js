@@ -14,10 +14,20 @@ var PollSchema = new Schema({
     type : String,
     required : true
   },
-  options : {
-    type : Array,
-    required : true
-  }
+  // options : {
+  //   type : Array,
+  //   required : true
+  // },
+  options : [{
+    option : {
+      type     : String,
+      required : true
+    },
+    count  : {
+      type     : Number,
+      default  : 0
+    }
+  }]
 });
 
 module.exports = mongoose.model('Poll', PollSchema);

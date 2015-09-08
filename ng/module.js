@@ -6,5 +6,6 @@
                               'ui.router',
                               'satellizer',
                               'ngMaterial',
-                              'ngMdIcons']);
+                              'ngMdIcons',
+                              'chart.js']);
 })();

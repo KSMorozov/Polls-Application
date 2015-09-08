@@ -6,7 +6,8 @@
                               'ui.router',
                               'satellizer',
                               'ngMaterial',
-                              'ngMdIcons']);
+                              'ngMdIcons',
+                              'chart.js']);
 })();
 
 (function () {
@@ -46,14 +47,45 @@
 
 (function () {
   angular.module('PollsApp')
-  .controller('HomeController', function ($scope, $auth, $location) {
+  .factory('Chart', function () {
+    return {
+      gendata : function (data) {
+        var reduced = [[], []];
+
+        data.forEach(function (e) {
+          reduced[0].push(e.count);
+          reduced[1].push(e.option);
+        });
+
+        return {
+          data   : reduced[0],
+          labels : reduced[1]
+        };
+      }
+    };
+  });
+})();
+
+(function () {
+  angular.module('PollsApp')
+  .controller('HomeController', function ($scope, $auth, $location, Polls) {
     var self = this;
 
     self.isLoggedIn = function () {
       return $auth.isAuthenticated();
     };
 
+    self.getPolls = function () {
+      Polls.getPolls()
+      .then(function (res) {
+        self.poll = res.data[0];
+        console.log(res.data[0]);
+      });
+    };
+
     self.message = 'Home';
+
+    if (self.isLoggedIn()) self.getPolls();
   });
 })();
 
@@ -107,10 +139,79 @@
 
 (function () {
   angular.module('PollsApp')
-  .controller('PollsController', function () {
+  .controller('PollController', function ($scope, $auth, $location, Polls, Chart) {
+    var self = this;
+    self.vote   = '';
+    self.voteid = '';
+
+    self.pie    = {};
+
+    self.isLoggedIn = function () {
+      return $auth.isAuthenticated();
+    };
+
+    self.getPoll = function () {
+      Polls.getPoll()
+      .then(function (res, err) {
+        self.poll = res.data;
+        self.vote = self.poll.options[0].option;
+        self.pie  = Chart.gendata(res.data.options);
+      }, function (err) {
+        self.errmsg = 'No Such Poll Exists.';
+      });
+    };
+
+    self.sendVote = function () {
+      self.poll.options.forEach(function (e) {
+        if (e.option === self.vote) self.voteid = e._id;
+      });
+      Polls.updatePoll(self.voteid);
+    };
+
+    self.message = 'Poll';
+    self.getPoll();
+    self.img = 'http://i.ytimg.com/vi/_NXrTujMP50/maxresdefault.jpg';
+    self.video = 'https://www.youtube.com/embed/_NXrTujMP50?autoplay=1';
+  });
+})();
+
+(function () {
+  angular.module('PollsApp')
+  .factory('Polls', function ($http, $stateParams) {
+    return {
+      getPolls : function () {
+        return $http.get('/api/polls');
+      },
+      getPoll  : function () {
+        return $http.get('/api/polls/' + $stateParams._id);
+      },
+      updatePoll : function (voteid) {
+        return $http.put('/api/polls/' + $stateParams._id + '/' + voteid);
+      }
+    };
+  });
+})();
+
+(function () {
+  angular.module('PollsApp')
+  .controller('PollsController', function ($scope, $auth, $location, Polls) {
     var self = this;
 
-    self.message = 'Polls Controller';
+    self.isLoggedIn = function () {
+      return $auth.isAuthenticated();
+    };
+
+    self.getPolls = function () {
+      Polls.getPolls()
+      .then(function (res) {
+        self.polls = res.data;
+        console.log(self.polls);
+      });
+    };
+
+    self.message = 'Polls';
+
+    if (self.isLoggedIn()) self.getPolls();
   });
 })();
 
@@ -156,11 +257,17 @@
       resolve      : {
         loginRequired : loginRequired
       }
+    })
+    .state('poll', {
+      url          : '/:_id',
+      templateUrl  : 'templates/poll.html',
+      controller   : 'PollController',
+      controllerAs : 'PollCtrl'
     });
 
     $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);
-    
+
     function skipIfLoggedIn($q, $auth) {
       var deferred = $q.defer();
       if ($auth.isAuthenticated()) deferred.reject();

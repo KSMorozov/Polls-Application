@@ -1,0 +1,29 @@
+md-content.content-custom(layout='column', layout-align='center',
+           layout-padding='', ng-if='!activeUser',
+           flex-sm='', flex-md='65', flex-lg='65', flex-gt-lg='40')
+  //- div(layout='row', layout-align='center')
+  md-toolbar.content-toolbar(layout='row', ng-if='PollCtrl.isLoggedIn()')
+    .md-toolbar-tools
+      .md-title(ng-bind='PollCtrl.poll.subject || "Poll"')
+  md-content.md-whiteframe-z1(layout='column', layout-align='center start', 
+                              layout-padding='', ng-if='PollCtrl.isLoggedIn()')
+    form(ng-if='!PollCtrl.errmsg', ng-submit='PollCtrl.sendVote()', layout-fill='', layout-margin='', layout="column", flex='')
+      canvas.chart.chart-pie(id='pie',
+                             chart-data='PollCtrl.pie.data',
+                             chart-labels='PollCtrl.pie.labels')
+      p(ng-if='!PollCtrl.voteid') Vote for : 
+        span(ng-bind='PollCtrl.vote')
+      p(ng-if='PollCtrl.voteid') Voted for : 
+        span(ng-bind='PollCtrl.vote')
+      md-radio-group(ng-model='PollCtrl.vote')
+        div(layout='row', layout-align='space-between center',
+            ng-repeat='option in PollCtrl.poll.options')
+          md-radio-button(ng-value ='option.option',
+                          ng-disabled='PollCtrl.voteid') {{option.option}}
+          label {{option.count}}
+      md-button.md-raised.md-primary(type='submit', ng-if='!PollCtrl.voteid') Vote
+    md-card(ng-if='PollCtrl.errmsg', layout-fill='')
+      iframe.md-card-image(id='player', type='text/html', src='https://www.youtube.com/embed/_NXrTujMP50?autoplay=1&controls=0', frameborder='0')
+      md-card-content
+        h2.md-title(ng-bind='PollCtrl.errmsg')
+    
