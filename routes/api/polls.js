@@ -11,7 +11,8 @@ module.exports = {
     poll.save(function (err) {
       if (err) res.send(err);
       res.json({
-        message : 'New Poll Created!'
+        message : 'New Poll Created!',
+        id      : poll._id
       });
     });
   },
@@ -36,6 +37,20 @@ module.exports = {
       }
     }, function (err, data) {
       if (err) return res.send(err);
+    });
+  },
+  delete : function (req, res) {
+    Poll.findById(req.params._id, function (err, poll) {
+      if (err) return next(err);
+      if (!poll) return res.sendStatus(404);
+      if (poll.owner.equals(req.user._id)) {
+        poll.remove(function (err) {
+          if (err) return next(err);
+          return res.send(204);
+        });
+      } else {
+        return res.sendStatus(505);
+      }
     });
   }
 };

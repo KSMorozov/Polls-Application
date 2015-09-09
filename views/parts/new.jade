@@ -1,0 +1,19 @@
+md-content.content-custom(layout='column', layout-align='center',
+           layout-padding='', ng-if='!activeUser',
+           flex-sm='', flex-md='65', flex-lg='65', flex-gt-lg='40')
+  //- div(layout='row', layout-align='center')
+  md-toolbar.content-toolbar(layout='row', ng-if='NewCtrl.isLoggedIn()')
+    .md-toolbar-tools
+      .md-title(ng-bind='NewCtrl.subject || "Your Question" | limitTo : 60')
+  md-content.md-whiteframe-z1(layout='column', layout-align='center start', 
+                              layout-padding='', ng-if='NewCtrl.isLoggedIn()')
+    form(ng-submit='NewCtrl.newPoll()',
+                layout-fill='', layout-margin='', layout="column", flex='')
+      md-input-container
+        label Subject
+        input(ng-model='NewCtrl.subject', required='')
+      md-input-container(ng-repeat='option in NewCtrl.options')
+        label(ng-bind='option.option')
+        input(ng-model='option.option',
+              ng-focus='NewCtrl.addOption()')
+      md-button.md-raised.md-primary(type='submit') Create

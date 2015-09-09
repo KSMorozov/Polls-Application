@@ -18,7 +18,7 @@
         self.vote = self.poll.options[0].option;
         self.pie  = Chart.gendata(res.data.options);
       }, function (err) {
-        self.errmsg = 'No Such Poll Exists.';
+        self.errmsg = '404 No Such Poll Exists.';
       });
     };
 

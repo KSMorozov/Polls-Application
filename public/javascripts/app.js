@@ -68,6 +68,21 @@
 
 (function () {
   angular.module('PollsApp')
+  .controller('DeleteController', function ($scope, $location, $auth, toaster, Polls) {
+    if (!$auth.isAuthenticated()) return ;
+
+    Polls.deletePoll()
+    .then(function () {
+      toaster.info('Delete', 'You have successfully Deleted Poll.');
+      $location.path('/polls');
+    }, function (err) {
+      toaster.error('Delete', 'You have failed to Delete Poll.');
+    });
+  });
+})();
+
+(function () {
+  angular.module('PollsApp')
   .controller('HomeController', function ($scope, $auth, $location, Polls) {
     var self = this;
 
@@ -79,7 +94,6 @@
       Polls.getPolls()
       .then(function (res) {
         self.poll = res.data[0];
-        console.log(res.data[0]);
       });
     };
 
@@ -137,6 +151,37 @@
   });
 })();
 
+/* jshint ignore:start */
+(function () {
+  angular.module('PollsApp')
+  .controller('NewController', function ($scope, $auth, $location, Polls) {
+    var self  = this;
+    self.subject = '';
+    self.options = [{option : '', count : 0}];
+
+    self.isLoggedIn = function () {
+      return $auth.isAuthenticated();
+    };
+
+    self.addOption  = function () {
+      self.options.push({option : '', count : 0});
+    };
+
+    self.newPoll    = function () {
+      self.options.pop();
+      Polls.createPoll({
+        subject : self.subject,
+        options : self.options
+      })
+      .then(function (res) {
+        console.log('hey', res);
+        $location.path(`/${res.data.id}`);
+      });
+    };
+  });
+})();
+/* jshint ignore:end */
+
 (function () {
   angular.module('PollsApp')
   .controller('PollController', function ($scope, $auth, $location, Polls, Chart) {
@@ -157,7 +202,7 @@
         self.vote = self.poll.options[0].option;
         self.pie  = Chart.gendata(res.data.options);
       }, function (err) {
-        self.errmsg = 'No Such Poll Exists.';
+        self.errmsg = '404 No Such Poll Exists.';
       });
     };
 
@@ -175,6 +220,7 @@
   });
 })();
 
+/* jshint ignore:start */
 (function () {
   angular.module('PollsApp')
   .factory('Polls', function ($http, $stateParams) {
@@ -187,10 +233,17 @@
       },
       updatePoll : function (voteid) {
         return $http.put('/api/polls/' + $stateParams._id + '/' + voteid);
+      },
+      deletePoll : function () {
+        return $http.delete(`/api/polls/${$stateParams._id}/delete`);
+      },
+      createPoll : function (poll) {
+        return $http.post('/api/polls', poll);
       }
     };
   });
 })();
+/* jshint ignore:end */
 
 (function () {
   angular.module('PollsApp')
@@ -205,7 +258,6 @@
       Polls.getPolls()
       .then(function (res) {
         self.polls = res.data;
-        console.log(self.polls);
       });
     };
 
@@ -258,11 +310,32 @@
         loginRequired : loginRequired
       }
     })
+    .state('new',  {
+      url          : '/new',
+      templateUrl  : 'templates/new.html',
+      controller   : 'NewController',
+      controllerAs : 'NewCtrl',
+      resolve      : {
+        loginRequired : loginRequired
+      }
+    })
     .state('poll', {
       url          : '/:_id',
       templateUrl  : 'templates/poll.html',
       controller   : 'PollController',
-      controllerAs : 'PollCtrl'
+      controllerAs : 'PollCtrl',
+      resolve      : {
+        loginRequired : loginRequired
+      }
+    })
+    .state('delete', {
+      url          : '/:_id/delete',
+      template     : null,
+      controller   : 'DeleteController',
+      controllerAs : 'DeleteCtrl',
+      resolve      : {
+        loginRequired : loginRequired
+      }
     });
 
     $urlRouterProvider.otherwise('/');

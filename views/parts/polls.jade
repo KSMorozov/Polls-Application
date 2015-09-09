@@ -17,6 +17,11 @@ md-content.content-custom(layout='column', layout-align='center',
                           ng-disabled='HomeCtrl.voteid',
                           ng-bind='option.option')
           label {{option.count}}
-      md-button(class='md-raised md-primary',
-                ui-sref='poll({_id:poll._id})') View  
+      div(layout='row', layout-align='space-between center')
+        div(layout='row', layout-align='start center')
+          md-button(class='md-raised md-primary',
+                    ui-sref='poll({_id:poll._id})') View  
+        div(layout='row', layout-align='end center') 
+          md-button(class='md-raised md-warn',
+                    ui-sref='delete({_id:poll._id})') Delete  
       md-divider(ng-if='!$last')

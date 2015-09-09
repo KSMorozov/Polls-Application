@@ -11,7 +11,6 @@
       Polls.getPolls()
       .then(function (res) {
         self.poll = res.data[0];
-        console.log(res.data[0]);
       });
     };
 

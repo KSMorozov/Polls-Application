@@ -41,11 +41,32 @@
         loginRequired : loginRequired
       }
     })
+    .state('new',  {
+      url          : '/new',
+      templateUrl  : 'templates/new.html',
+      controller   : 'NewController',
+      controllerAs : 'NewCtrl',
+      resolve      : {
+        loginRequired : loginRequired
+      }
+    })
     .state('poll', {
       url          : '/:_id',
       templateUrl  : 'templates/poll.html',
       controller   : 'PollController',
-      controllerAs : 'PollCtrl'
+      controllerAs : 'PollCtrl',
+      resolve      : {
+        loginRequired : loginRequired
+      }
+    })
+    .state('delete', {
+      url          : '/:_id/delete',
+      template     : null,
+      controller   : 'DeleteController',
+      controllerAs : 'DeleteCtrl',
+      resolve      : {
+        loginRequired : loginRequired
+      }
     });
 
     $urlRouterProvider.otherwise('/');

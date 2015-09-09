@@ -21,4 +21,12 @@ md-content.content-custom(layout='column', layout-align='center',
                           ng-disabled='HomeCtrl.voteid',
                           ng-bind='option.option')
           label {{option.count}}
-      md-button(class='md-raised md-primary', ui-sref='polls') View All
+      div(layout='row', layout-align='space-between center')
+        div(layout='row', layout-align='start center')
+          md-button(class='md-raised md-primary',
+                    ui-sref='new') New
+          md-button(class='md-raised md-primary',
+                    ui-sref='polls') View All 
+        div(layout='row', layout-align='end center') 
+          md-button(class='md-raised md-warn',
+                    ui-sref='delete({_id:HomeCtrl.poll._id})') Delete  
