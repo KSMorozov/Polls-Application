@@ -6,7 +6,7 @@ md-content.content-custom(layout='column', layout-align='center',
     .md-toolbar-tools
       .md-title(ng-bind='PollCtrl.poll.subject || "404"')
   md-content.md-whiteframe-z1(layout='column', layout-align='center start', 
-                              layout-padding='', ng-if='PollCtrl.isLoggedIn()')
+                              layout-padding='')
     form(ng-if='!PollCtrl.errmsg', ng-submit='PollCtrl.sendVote()', layout-fill='', layout-margin='', layout="column", flex='')
       canvas.chart.chart-pie(id='pie',
                              chart-data='PollCtrl.pie.data',

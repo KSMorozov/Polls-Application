@@ -323,10 +323,7 @@
       url          : '/:_id',
       templateUrl  : 'templates/poll.html',
       controller   : 'PollController',
-      controllerAs : 'PollCtrl',
-      resolve      : {
-        loginRequired : loginRequired
-      }
+      controllerAs : 'PollCtrl'
     })
     .state('delete', {
       url          : '/:_id/delete',
