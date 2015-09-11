@@ -31,8 +31,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expjwt({ secret : config.secret }).unless({ path : [ '/',
                                                              '/auth/login',
-                                                             '/auth/signup',
-                                                             /^\/api\/polls\/(.*)/] }));
+                                                             '/auth/signup'] }));
 
 app.use('/auth', auth);
 app.use('/api', api);
