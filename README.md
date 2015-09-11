@@ -36,3 +36,5 @@
 # Enjoy
 ![Footer Image]
 (https://octodex.github.com/images/nyantocat.gif)
+
+### *This project is licensed under the terms of the MIT license.*
