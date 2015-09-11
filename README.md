@@ -1,8 +1,38 @@
-# vote-app
-FreeCodeCamp Project
+# Polls Application
+## FreeCodeCamp Basejump Project
+![Header Image]
+(https://octodex.github.com/images/baracktocat.jpg)
+# **Technology stack :**
+## **Frontend :**
+* Angular(MVC)
+  * -Animate
+  * -Messages
+  * -Resource
+  * -UI-Router(Routing)
+  * -Toaster(Notifications)
+  * -Chart.js(Polls Visualisation)
+  * -Material(Views)
+      * -aria
+      * -icons
+* Satellizer(Authentication)
 
-To deploy:
-  - Clone repo
-  - npm install
-  - npm start(-g nodemon required)
-  - access at localhost:8080
+## **Backend :**
+* MongoDB
+* Node.js
+  * Express.js
+    * Jsonwebtoken(Sign/Verify jwt's)
+    * Express-jwt(Authentication)
+    * Mongoose(Talking to Mongodb)
+    * Jade(Template Engine)
+    * Bcrypt(Hashing)
+
+## **Deploy :**
+- `git clone https://github.com/KSMorozov/vote-app.git`
+- `npm install`
+- `npm install -g nodemon`
+- `npm start`
+- **Access at**  `localhost:8080`
+
+# Enjoy
+![Footer Image]
+(https://octodex.github.com/images/nyantocat.gif)
